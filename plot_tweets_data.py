@@ -1,7 +1,6 @@
 import json
 import pandas as pd
 import matplotlib.pyplot as plt
-from pylab import *
 
 tweets_data_path = 'twitter_data.txt'
 
@@ -14,7 +13,7 @@ for line in tweets_file:
     except:
         continue
 
-print len(tweets_data)
+print "All tweets:{}".format(len(tweets_data))
 
 tweets = pd.DataFrame()
 tweets['text'] = map(lambda tweet: tweet['text'], tweets_data)
