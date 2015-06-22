@@ -4,9 +4,18 @@ from plot_tweets_data import tweets
 from plot_tweets_data import tweets_data
 from tweets_raw_data_mining import word_in_text, prg_langs
 
+
+def extract_link(text):
+        regex = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
+        match = re.search(regex, text)
+        if match:
+            return match.group()
+        return ''
+
 tweets['programming'] = tweets['text'].apply(lambda tweet: word_in_text('programming', tweet))
 tweets['tutorial'] = tweets['text'].apply(lambda tweet: word_in_text('tutorial', tweet))
 tweets['relevant'] = tweets['text'].apply(lambda tweet: word_in_text('programming', tweet) or word_in_text('tutorial', tweet))
+tweets['link'] = tweets['text'].apply(lambda tweet: extract_link(tweet))
 
 
 if __name__ == '__main__':
@@ -35,3 +44,12 @@ if __name__ == '__main__':
     ax.set_xticks([p + 0.4 * width for p in x_pos])
     ax.set_xticklabels(prg_langs)
     fig.savefig('plot4.png')
+
+    tweets_relevant = tweets[tweets['relevant'] == True]
+    tweets_relevant_with_link = tweets_relevant[tweets_relevant['link'] != '']
+    print "Links:"
+    print "Pyhton:{}".format(tweets_relevant_with_link[tweets_relevant_with_link['python'] == True]['link'])
+    print "__________________"
+    print "JS:{}".format(tweets_relevant_with_link[tweets_relevant_with_link['javascript'] == True]['link'])
+    print "__________________"
+    print "Ruby:{}".format(tweets_relevant_with_link[tweets_relevant_with_link['ruby'] == True]['link'])
